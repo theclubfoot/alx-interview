@@ -1,18 +1,21 @@
-def canUnlockAll(boxes):
-    # Set to keep track of visited boxes
-    visited = set()
-    # Recursive function to open the boxes
-    def open_boxes(boxes, i):
-        # Base case: if the box is already visited, return
-        if i in visited:
-            return
-        # Add the box to the visited set
-        visited.add(i)
-        # Open all the boxes that can be opened with the keys in the current box
-        for key in boxes[i]:
-            open_boxes(boxes, key)
-    # Start by opening the first box
-    open_boxes(boxes, 0)
-    # Return True if all boxes can be opened, else return False
-    return len(visited) == len(boxes)
+#!/usr/bin/python3
+'''A module for working with lockboxes.
+'''
 
+
+def canUnlockAll(boxes):
+    '''Checks if all the boxes in a list of boxes containing the keys
+    (indices) to other boxes can be unlocked given that the first
+    box is unlocked.
+    '''
+    n = len(boxes)
+    seen_boxes = set([0])
+    unseen_boxes = set(boxes[0]).difference(set([0]))
+    while len(unseen_boxes) > 0:
+        boxIdx = unseen_boxes.pop()
+        if not boxIdx or boxIdx >= n or boxIdx < 0:
+            continue
+        if boxIdx not in seen_boxes:
+            unseen_boxes = unseen_boxes.union(boxes[boxIdx])
+            seen_boxes.add(boxIdx)
+    return n == len(seen_boxes)
